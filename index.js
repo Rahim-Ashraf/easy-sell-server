@@ -42,8 +42,15 @@ async function run() {
       res.send(result)
     })
     app.get("/single-page-products", async (req, res) => {
-      const result = await productsCollection.find().limit(2).skip(1).toArray();
+      const skip = req.query.skip;
+      const result = await productsCollection.find().limit(12).skip(parseInt(skip)).toArray();
       res.send(result)
+    })
+    app.get("/products-by-name", async (req, res) => {
+      const text = req.query.text
+      const query = { name: { $regex: text, $options: 'i' } };
+      const result = await productsCollection.find(query).toArray();
+      res.send(result);
     })
 
     // await client.db("admin").command({ ping: 1 });
