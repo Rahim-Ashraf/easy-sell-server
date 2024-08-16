@@ -10,6 +10,8 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
+      "https://easy-sell-304cc.web.app",
+      "https://easy-sell-304cc.firebaseapp.com",
     ],
     credentials: true,
   })
