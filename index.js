@@ -33,7 +33,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
     // Send a ping to confirm a successful connection
 
     const easy_sell = client.db("easy_sell");
@@ -51,6 +51,14 @@ async function run() {
     app.get("/products-by-name", async (req, res) => {
       const text = req.query.text
       const query = { name: { $regex: text, $options: 'i' } };
+      const result = await productsCollection.find(query).toArray();
+      res.send(result);
+    })
+    app.get("/filterd-products", async (req, res) => {
+      const body = req.query.body;
+      const brandName = body.brandName;
+      const Category = body.Category;
+      const query = { brand_name: brandName, category_name: Category };
       const result = await productsCollection.find(query).toArray();
       res.send(result);
     })
