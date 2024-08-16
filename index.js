@@ -55,10 +55,15 @@ async function run() {
       res.send(result);
     })
     app.get("/filterd-products", async (req, res) => {
-      const body = req.query.body;
+      const body = req.query;
       const brandName = body.brandName;
-      const Category = body.Category;
-      const query = { brand_name: brandName, category_name: Category };
+      const category = body.categoryName;
+      const query = {
+        $or: [
+          { brand_name: brandName },
+          { category_name: category }
+        ]
+      };
       const result = await productsCollection.find(query).toArray();
       res.send(result);
     })
