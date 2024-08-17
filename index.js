@@ -56,7 +56,6 @@ async function run() {
     })
     app.get("/filterd-products", async (req, res) => {
       const body = req.query;
-      console.log(body)
       const brandName = body.brandName;
       const category = body.categoryName;
       const minPrice = parseFloat(body.minPrice) || 0;
