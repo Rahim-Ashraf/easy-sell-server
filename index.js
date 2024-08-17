@@ -56,16 +56,41 @@ async function run() {
     })
     app.get("/filterd-products", async (req, res) => {
       const body = req.query;
+      console.log(body)
       const brandName = body.brandName;
       const category = body.categoryName;
-      const query = {
-        $or: [
-          { brand_name: brandName },
-          { category_name: category }
-        ]
-      };
-      const result = await productsCollection.find(query).toArray();
-      res.send(result);
+      const minPrice = parseFloat(body.minPrice) || 0;
+      const maxPrice = parseFloat(body.maxPrice) || Number.MAX_SAFE_INTEGER;
+      if (!brandName && !category) {
+        const query = {
+          price: {
+            $gte: minPrice,
+            $lte: maxPrice
+          }
+        };
+        const result = await productsCollection.find(query).toArray();
+        res.send(result);
+        return;
+      } else if (brandName || category || minPrice || parseFloat(body.maxPrice)) {
+        const query = {
+          $and: [
+            {
+              $or: [
+                { brand_name: brandName },
+                { category_name: category },
+              ]
+            },
+            {
+              price: {
+                $gte: minPrice,
+                $lte: maxPrice
+              }
+            }
+          ]
+        };
+        const result = await productsCollection.find(query).toArray();
+        res.send(result);
+      }
     })
 
     // await client.db("admin").command({ ping: 1 });
